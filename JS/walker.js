@@ -10,13 +10,8 @@
     let leftPreference = false;
     const randomizeSpawn = document.getElementById("randomSpawn");
     let randomSpawn = true;
-    if(randomSpawn){
-        randomizeSpawn.style.backgroundColor = "black";
-        randomizeSpawn.disabled = true;
-    } else {
-        randomizeSpawn.disabled = false;
-        randomizeSpawn.style.backgroundColor = "#333232";
-    }
+    randomizeSpawn.style.backgroundColor = "black";
+    randomizeSpawn.disabled = true;
     let range1 = 100;
     let range2 = 100;
     let range3 = 100;
@@ -118,14 +113,38 @@
         learn();
         walker.color = ranColor();
     }
+    randomizeSpawn.addEventListener("click", function(){
+        randomSpawn = true;
+        if(randomSpawn){
+            randomizeSpawn.style.backgroundColor = "black";
+            randomizeSpawn.disabled = true;
+        }
+    });
     spawnLeft.addEventListener("click", function(){
-
-    })
+        randomizeSpawn.disabled = false;
+        randomizeSpawn.style.backgroundColor = "#333232";
+        leftPreference = true;
+        rightPreference = false;
+    });
+    spawnRight.addEventListener("click", function (){
+        randomizeSpawn.disabled = false;
+        randomizeSpawn.style.backgroundColor = "#333232";
+        rightPreference = true;
+        leftPreference = false;
+    });
     function startNextCycle(){
-        let ranXSpawn = Math.floor(Math.random() * 600) + 150;
+        let ranXSpawn;
+        if(randomSpawn){
+            ranXSpawn = Math.floor(Math.random() * 600) + 150;
+        }
+        if(rightPreference) {
+            ranXSpawn = Math.floor(Math.random() * 600) + 150;
+        } else if(leftPreference){
+            ranXSpawn = Math.floor(Math.random() * 50) + 50;
+        }
         let ranYSpawn = Math.floor(Math.random() * 150) + 600;
         if(goalFlipped){
-            ranYSpawn = Math.floor(Math.random() * 50) + 100;
+            ranYSpawn = Math.floor(Math.random() * 50) + 500;
         }
         if(inGoal(walker.x, walker.y, walker.size, goal.x, goal.y, goal.w, goal.h, goalFlipped)){
                 walker.y = ranYSpawn;
