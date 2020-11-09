@@ -2,3 +2,15 @@ body{
     background-color: black;
     padding: 5em;
 }
+.gameArea{
+    display: flex;
+}
+button{
+    background-color: #333232;
+    color: aliceblue;
+    border: 2px solid black;
+    border-radius: 25px;
+}
+button:hover{
+    cursor: pointer;
+}

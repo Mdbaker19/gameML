@@ -1,6 +1,22 @@
 (function (){
     const cvs = document.getElementById("walker");
     const ctx = cvs.getContext("2d");
+    const flipGoal = document.getElementById("flipGoal");
+    let goalFlipped = false;
+    let flipCounter = 0;
+    const spawnRight = document.getElementById("spawnRight");
+    let rightPreference = false;
+    const spawnLeft = document.getElementById("spawnLeft");
+    let leftPreference = false;
+    const randomizeSpawn = document.getElementById("randomSpawn");
+    let randomSpawn = true;
+    if(randomSpawn){
+        randomizeSpawn.style.backgroundColor = "black";
+        randomizeSpawn.disabled = true;
+    } else {
+        randomizeSpawn.disabled = false;
+        randomizeSpawn.style.backgroundColor = "#333232";
+    }
     let range1 = 100;
     let range2 = 100;
     let range3 = 100;
@@ -36,83 +52,109 @@
             }
         }
     }
-    const goal = {
+    let goal = {
         x: cvs.width/2 - 25,
-        y: 0
+        y: 0,
+        w: 50,
+        h: 25
     }
-    let reassigned = true;
+    flipGoal.addEventListener("click", function (){
+        flipCounter++;
+        if(flipCounter % 2 !== 0) {
+            goal.y = 775;
+            goalFlipped = true;
+        } else {
+            goal.y = 0;
+            goalFlipped = false;
+        }
+    });
     setInterval(load, 50);
     function load(){
         draw();
         walker.walk();
         startNextCycle();
-        if(walker.x >= 400 && walker.x <= 350){
-            walker.moveX = 0;
-        }
-    if(reassigned) {
-        if (walker.x > cvs.width / 2) {
-            reassigned = false;
-            range1 = 100;
-            range2 = 100;
+    }
+    function inGoal(walkerX, walkerY, walkerSize, goalX, goalY, goalWidth, goalHeight, flipStatus){
+        if(walkerX + walkerSize > goalX && walkerX < goalX + goalWidth){
+            if((walkerY + walkerSize > goalY && flipStatus) || (walkerY < goalY + goalHeight && !flipStatus)){
+                return true;
+            }
         }
     }
+    let chance1 = range1/400;
+    let chance2 = range2/400;
+    let chance3 = range3/400;
+    let chance4 = range4/400;
+    function updateChances(){
+        chance1 = range1/400;
+        chance2 = range2/400;
+        chance3 = range3/400;
+        chance4 = range4/400;
     }
+    setInterval(updateChances, 50);
     function draw(){
         fill(0, 0, cvs.width, cvs.height, "#0e0b0b");//canvas
         fill(walker.x, walker.y, walker.size, walker.size, walker.color);//walker
-        fill(goal.x, goal.y, 50, 25, "#e1d3d3");//goal
-        ctx.fillText("Life Cycle Number: " + lifeCycleNum, 100, 100, 100);//life counter
-        ctx.fillText("goal", cvs.width/2 - 12.5, 40, 25);//text
-        ctx.fillText(`current coordintates: [${walker.x}, ${walker.y}]`, 200, 200, 200);
+        fill(goal.x, goal.y, goal.w, goal.h, "#e1d3d3");//goal
+        if(!goalFlipped) {
+            ctx.fillText("goal", cvs.width/2 - 12.5, 40, 50);//text
+        } else {
+            ctx.fillText("goal", cvs.width/2 - 12.5, 760, 50)
+        }
+        ctx.fillText("Life Cycle Number: " + lifeCycleNum, 50, 100, 100);//life counter
+        ctx.fillText(`current coordinates: [${walker.x}, ${walker.y}]`, 50, 200, 200);
+        ctx.fillText(`chance to go right is: ${chance1}%`, 50, 250, 200);
+        ctx.fillText(`chance to go left is: ${chance2}%`, 50, 275, 200);
+        ctx.fillText(`chance to go up is: ${chance3}%`, 50, 300, 200);
+        ctx.fillText(`chance to go down is: ${chance4}%`, 50, 325, 200);
     }
     function fill(lx, ty, w, h, c){
         ctx.fillStyle = c;
         ctx.fillRect(lx, ty, w, h);
     }
 
-    let startingXDistance;
-    let startingYDistance;
-    function checkDistance(){
-        startingXDistance = walker.x - goal.x;
-        startingYDistance = walker.y - goal.y;
-        if(walker.y > 0) {
-            console.log("current x dis: " + startingXDistance);
-            console.log("current y dis: " + startingYDistance);
-        }
-    }
-    setInterval(checkDistance, 1000);
-    setInterval(evolve, 2000);
+    setInterval(evolve, 1000);
     function evolve(){
         learn();
         walker.color = ranColor();
     }
+    spawnLeft.addEventListener("click", function(){
+
+    })
     function startNextCycle(){
         let ranXSpawn = Math.floor(Math.random() * 600) + 150;
         let ranYSpawn = Math.floor(Math.random() * 150) + 600;
-        if(walker.y < 10){
-            walker.y = ranYSpawn;
-            walker.x = ranXSpawn;
-            lifeCycleNum++;
-            walker.moveX = 5;
+        if(goalFlipped){
+            ranYSpawn = Math.floor(Math.random() * 50) + 100;
+        }
+        if(inGoal(walker.x, walker.y, walker.size, goal.x, goal.y, goal.w, goal.h, goalFlipped)){
+                walker.y = ranYSpawn;
+                walker.x = ranXSpawn;
+                lifeCycleNum++;
         }
     }
-    function learn(){
-        if(walker.x - goal.x < startingXDistance){
-            if(range2 < 400) {
+
+    function learn() {
+        if (walker.x < goal.x) {
+            if (range1 < 400 || range2 < 400) {
                 range1 += 5;
+                range2 -= 3;
             }
-        } else{
-            if(range1 < 400) {
+        } else if (walker.x > goal.x) {
+            if (range2 < 400 || range1 < 400) {
                 range2 += 5;
+                range1 -= 3;
             }
         }
-        if(walker.y - goal.y < startingYDistance){
-            if(range4 < 400) {
+        if (walker.y < goal.y) {
+            if (range4 < 400 || range3 < 400) {
                 range4 += 5;
+                range3 -= 3;
             }
-        } else {
-            if(range3 < 400) {
+        } else if (walker.y > goal.y) {
+            if (range3 < 400 || range4 < 400) {
                 range3 += 5;
+                range4 -= 3;
             }
         }
     }
