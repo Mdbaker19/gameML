@@ -1,0 +1,8 @@
+body{
+    background-color: #837d7d;
+    padding: 5em;
+}
+#gridArea{
+    border: 5px solid aliceblue;
+    border-radius: 5px;
+}

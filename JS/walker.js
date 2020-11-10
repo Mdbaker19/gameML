@@ -25,12 +25,13 @@
         moveY: 5,
         color: "#ffffff",
         walk: function (){
-            let randomNum = Math.floor(Math.random() * 400) + 1;
+            let randomNum = Math.floor(Math.random() * 600) + 1;
             if(randomNum < range1){
                 if(this.x + this.size < cvs.width) {
                     this.x += this.moveX;
                 }
-            } else if(randomNum < range2){
+            }
+            if(randomNum < range2){
                 if(this.x > 0) {
                     this.x -= this.moveX;
                 }
@@ -40,7 +41,8 @@
                 if(this.y > 0) {
                     this.y -= this.moveY;
                 }
-            } else if(randomNum < range4){
+            }
+            if(randomNum < range4){
                 if(this.y + this.size < cvs.height) {
                     this.y += this.moveY;
                 }
@@ -63,7 +65,7 @@
             goalFlipped = false;
         }
     });
-    setInterval(load, 50);
+    setInterval(load, 5);
     function load(){
         draw();
         walker.walk();
@@ -76,15 +78,15 @@
             }
         }
     }
-    let chance1 = range1/400;
-    let chance2 = range2/400;
-    let chance3 = range3/400;
-    let chance4 = range4/400;
+    let chance1 = range1/600;
+    let chance2 = range2/600;
+    let chance3 = range3/600;
+    let chance4 = range4/600;
     function updateChances(){
-        chance1 = range1/400;
-        chance2 = range2/400;
-        chance3 = range3/400;
-        chance4 = range4/400;
+        chance1 = range1/600;
+        chance2 = range2/600;
+        chance3 = range3/600;
+        chance4 = range4/600;
     }
     setInterval(updateChances, 50);
     function draw(){
@@ -98,17 +100,17 @@
         }
         ctx.fillText("Life Cycle Number: " + lifeCycleNum, 50, 100, 100);//life counter
         ctx.fillText(`current coordinates: [${walker.x}, ${walker.y}]`, 50, 200, 200);
-        ctx.fillText(`chance to go right is: ${chance1}%`, 50, 250, 200);
-        ctx.fillText(`chance to go left is: ${chance2}%`, 50, 275, 200);
-        ctx.fillText(`chance to go up is: ${chance3}%`, 50, 300, 200);
-        ctx.fillText(`chance to go down is: ${chance4}%`, 50, 325, 200);
+        ctx.fillText(`chance to go right is: ${chance1.toFixed(2)}%`, 50, 250, 200);
+        ctx.fillText(`chance to go left is: ${chance2.toFixed(2)}%`, 50, 275, 200);
+        ctx.fillText(`chance to go up is: ${chance3.toFixed(2)}%`, 50, 300, 200);
+        ctx.fillText(`chance to go down is: ${chance4.toFixed(2)}%`, 50, 325, 200);
     }
     function fill(lx, ty, w, h, c){
         ctx.fillStyle = c;
         ctx.fillRect(lx, ty, w, h);
     }
 
-    setInterval(evolve, 1000);
+    setInterval(evolve, 50);
     function evolve(){
         learn();
         walker.color = ranColor();
@@ -138,7 +140,7 @@
             ranXSpawn = Math.floor(Math.random() * 600) + 150;
         }
         if(rightPreference) {
-            ranXSpawn = Math.floor(Math.random() * 600) + 150;
+            ranXSpawn = Math.floor(Math.random() * 150) + 600;
         } else if(leftPreference){
             ranXSpawn = Math.floor(Math.random() * 50) + 50;
         }
@@ -155,24 +157,32 @@
 
     function learn() {
         if (walker.x < goal.x) {
-            if (range1 < 400 || range2 < 400) {
+            if (range1 < 595) {
                 range1 += 5;
+            }
+            if(range2 > 5){
                 range2 -= 3;
             }
         } else if (walker.x > goal.x) {
-            if (range2 < 400 || range1 < 400) {
+            if (range2 < 595) {
                 range2 += 5;
+            }
+            if(range1 > 5){
                 range1 -= 3;
             }
         }
         if (walker.y < goal.y) {
-            if (range4 < 400 || range3 < 400) {
+            if (range4 < 595) {
                 range4 += 5;
+            }
+            if(range3 > 5){
                 range3 -= 3;
             }
         } else if (walker.y > goal.y) {
-            if (range3 < 400 || range4 < 400) {
+            if (range3 < 595) {
                 range3 += 5;
+            }
+            if(range4 > 5){
                 range4 -= 3;
             }
         }
