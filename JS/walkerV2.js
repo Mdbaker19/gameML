@@ -8,7 +8,7 @@
     let distanceAfterMove;
     const goal = {
         x: 375,
-        y: 770,
+        y: 700,
         w: 50,
         h: 30
     }
@@ -16,6 +16,7 @@
         x: 50,
         y: 50,
         s: 20,
+        memory: [],
         decisions: [{
             choice: "Up",
             choiceNum: 0
@@ -65,7 +66,6 @@
         // console.log(moveBest(finder.decisions));
         console.log(toFindInitialBestMove(finder.decisions));
     }
-    // setInterval(logDecisions, 300);
     function startMovements(){
         finder.initialMove();
     }
@@ -99,6 +99,9 @@
 
 
     //=============//
+    // THIS IS AFTER THE INITIAL BEST MOVE IS FOUND
+    // WILL HAVE TO MAKE MOVES THERE AFTER AND CONTINUE TO EVAL DISTANCE EVERY TIME
+    // PROBABLY HAVE TO KEEP INCREMENTING THE DECISIONS ARRAY AS MOVEMENTS HELP
     function findGoal(){
         if(toFindInitialBestMove(finder.decisions) === "UP"){
             console.log("Start going Up");
@@ -114,7 +117,7 @@
             // finder.x -= 5;
         }
     }
-
+    //==============//
     let forInitial = setInterval(runInitial, 50);
     function runInitial(){
         if ((toFindInitialBestMove(finder.decisions)) !== "notFound") {
@@ -170,5 +173,29 @@
         return Math.sqrt((a ** 2) + (b ** 2));
     }
 
+
+    //=================//
+    //===========================LOGIC NOTES AREA========================//
+    //
+    // BEST MOVE IS FOUND INITIALLY
+
+    // CONTINUE GOING THAT WAY WHILE CHECKING OTHER MOVES PERIODICALLY
+
+    // IF ANOTHER MOVE IS FOUND TO BE HELPFUL =>............ DO SOMETHING
+    // MAYBE START GOING THAT WAY HALF THE TIME OR SOMETHING
+
+    // BEGIN MAKING THE MOVES THAT HAVE THE MOST "HELPFULNESS" UNTIL
+    // THAT MOVE IS FOUND TO BE "UN-HELPFUL" (INCREASE DISTANCE)
+    // REMOVE THAT MOVE FROM THE DECISIONS ARRAY AS A POSSIBILITY INTO A "MEMORY" ARRAY
+    // IF THIS HAPPENS TO THE POINT WHERE ALL MOVES ARE NO LONGER HELPFUL, REFERENCE THE MEMORY ARRAY AND MAKE
+    // DECISIONS AGAIN BASED ON WHAT HAS THE HIGHEST "HELPFULNESS" COUNTER
+
+    // IF AT ANY TIME A PRIOR GOOD MOVE IS NOW FOUND TO BE A BAD MOVE,
+    // BEGIN SEARCHING ALL POSSIBLE MOVES AGAIN FOR THE NEW SET OF "HELPFUL" MOVES
+
+    // CONTINUE THIS UNTIL AT GOAL
+
+
+    //=====================================================//
 
 })();
