@@ -16,7 +16,9 @@
         x: 50,
         y: 50,
         s: 20,
+        moveSpeed: 10,
         memory: [],
+        rechecking: [],
         decisions: [{
             choice: "Up",
             choiceNum: 0
@@ -34,29 +36,41 @@
             let randomNum = Math.floor(Math.random() * 4);
             distanceBeforeMove = evalDistance(this.x, this.y, goal.x, goal.y);
             if(randomNum === 0){
-                this.y -= 5;
+                this.y -= this.moveSpeed;
                 distanceAfterMove = evalDistance(this.x, this.y, goal.x, goal.y);
                 if(distanceAfterMove < distanceBeforeMove){
                     this.decisions[0].choiceNum++;
                 }
             } else if(randomNum === 1){
-                this.x += 5;
+                this.x += this.moveSpeed;
                 distanceAfterMove = evalDistance(this.x, this.y, goal.x, goal.y);
                 if(distanceAfterMove < distanceBeforeMove){
                     this.decisions[1].choiceNum++;
                 }
             } else if(randomNum === 2){
-                this.y += 5;
+                this.y += this.moveSpeed;
                 distanceAfterMove = evalDistance(this.x, this.y, goal.x, goal.y);
                 if(distanceAfterMove < distanceBeforeMove){
                     this.decisions[2].choiceNum++;
                 }
             } else if(randomNum === 3){
-                this.x -= 5;
+                this.x -= this.moveSpeed;
                 distanceAfterMove = evalDistance(this.x, this.y, goal.x, goal.y);
                 if(distanceAfterMove < distanceBeforeMove){
                     this.decisions[3].choiceNum++;
                 }
+            }
+        },
+        traverse: function (){
+            console.log(beginPath());
+            if(beginPath() === "Up"){
+                this.y -= this.moveSpeed;
+            } else if(beginPath() === "Right"){
+                this.x += this.moveSpeed;
+            } else if(beginPath() === "Left"){
+                this.x -= this.moveSpeed;
+            } else if(beginPath() === "Down"){
+                this.y += this.moveSpeed;
             }
         }
     }
@@ -64,14 +78,16 @@
     //=========================//
     function logDecisions(){
         // console.log(moveBest(finder.decisions));
-        console.log(toFindInitialBestMove(finder.decisions));
+        console.log(finder.rechecking);
+        // console.log(toFindInitialBestMove(finder.decisions));
     }
     function startMovements(){
         finder.initialMove();
     }
     function beginFind(){
         startMovements();
-        // logDecisions();
+        moveBest(finder.decisions);
+        logDecisions();
     }
     let startSearch = setInterval(beginFind, 500);
 
@@ -88,8 +104,6 @@
         });
         preferredChoices.best = choice;
         preferredChoices.timesCorrect = highest;
-        // i want to remove this best and most helpful decision from the array to then have
-        // a second best option be in the preferred choices as well
         return preferredChoices;
     }
     //=========================//
@@ -102,44 +116,62 @@
     // THIS IS AFTER THE INITIAL BEST MOVE IS FOUND
     // WILL HAVE TO MAKE MOVES THERE AFTER AND CONTINUE TO EVAL DISTANCE EVERY TIME
     // PROBABLY HAVE TO KEEP INCREMENTING THE DECISIONS ARRAY AS MOVEMENTS HELP
-    function findGoal(){
-        if(toFindInitialBestMove(finder.decisions) === "UP"){
-            console.log("Start going Up");
-            // finder.y -= 5;
-        }else if(toFindInitialBestMove(finder.decisions) === "Right"){
-            console.log("Start going Right");
-            // finder.x += 5;
-        }else if(toFindInitialBestMove(finder.decisions) === "Down"){
-            console.log("Start going Down");
-            // finder.y += 5;
-        }else if(toFindInitialBestMove(finder.decisions) === "Left"){
-            console.log("Start going Left");
-            // finder.x -= 5;
-        }
+    // function findGoal(){
+    //     if(toFindInitialBestMoves(finder.decisions) === "UP"){
+    //         console.log("Start going Up");
+    //         finder.y -= 5;
+    //     }else if(toFindInitialBestMoves(finder.decisions) === "Right"){
+    //         console.log("Start going Right");
+    //         finder.x += 5;
+    //     }else if(toFindInitialBestMoves(finder.decisions) === "Down"){
+    //         console.log("Start going Down");
+    //         finder.y += 5;
+    //     }else if(toFindInitialBestMoves(finder.decisions) === "Left"){
+    //         console.log("Start going Left");
+    //         finder.x -= 5;
+    //     }
+    // }
+
+    function beginPath(){
+        //while move is found to be a good move continue path or current move possibilities from
+        // finder rechecking array
+        let options = Math.floor(Math.random()*2);
+        // console.log(typeof decision);
+        return finder.rechecking[options];
+
+
     }
+
+
+
     //==============//
     let forInitial = setInterval(runInitial, 50);
     function runInitial(){
-        if ((toFindInitialBestMove(finder.decisions)) !== "notFound") {
+        if ((toFindInitialBestMoves(finder.decisions)).length === 2) {
             clearInterval(forInitial);
             clearInterval(startSearch);
-            console.log(`Initial Search Stopped, best move is currently: ${toFindInitialBestMove(finder.decisions)}`);
-            setInterval(findGoal, 500);
+            console.log(`Initial Search Stopped, best move is currently: ${toFindInitialBestMoves(finder.decisions)}`);
+            console.log(`Go ${finder.rechecking[0]} and ${finder.rechecking[1]} to get to the goal`);
+            setInterval(traverseAndEval, 500);
         }
     }
 
+    function traverseAndEval(){
+        finder.traverse();
+        // a re-eval distance function here as well
+    }
 
-    function toFindInitialBestMove(arr){
+    function toFindInitialBestMoves(arr){
         let highest = 0;
-        let choice = "notFound";
         arr.forEach((item) => {
             if(item.choiceNum > highest){
-                highest = item.choiceNum;
-                choice = item.choice;
+                if(finder.rechecking.indexOf(item.choice) === -1){
+                    finder.rechecking.push(item.choice);
+                }
             }
         });
         // console.log(choice);
-        return choice;
+        return finder.rechecking;
     }
     //===============//
 
@@ -177,7 +209,7 @@
     //=================//
     //===========================LOGIC NOTES AREA========================//
     //
-    // BEST MOVE IS FOUND INITIALLY
+    // BEST MOVE IS FOUND INITIALLY ------------------ CODE SEEMS TO BE DONE, TWO MOVES ARE FOUND AND INITIAL SEARCH IS THEN STOPPED
 
     // CONTINUE GOING THAT WAY WHILE CHECKING OTHER MOVES PERIODICALLY
 
