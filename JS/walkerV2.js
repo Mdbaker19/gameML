@@ -17,17 +17,17 @@
         y: 50,
         s: 20,
         decisions: [{
-            choiceNum: 0,
-            choice: "Up"
+            choice: "Up",
+            choiceNum: 0
         }, {
-            choiceNum: 0,
-            choice: "Right"
+            choice: "Right",
+            choiceNum: 0
         }, {
-            choiceNum: 0,
-            choice: "Down"
+            choice: "Down",
+            choiceNum: 0
         }, {
-            choiceNum: 0,
-            choice: "Left"
+            choice: "Left",
+            choiceNum: 0
         }],
         initialMove: function (){
             let randomNum = Math.floor(Math.random() * 4);
@@ -94,8 +94,10 @@
     }
     //=========================//
 
-    //FOR LATER AFTER OTHER LOGIC IS FIGURED OUT. THIS WILL STOP THE INITIAL MOVEMENTS
-    // AND TELL WHICH MOVE SHOULD BE MADE AFTER IN THE CONSOLE;
+
+
+
+
     //=============//
     function findGoal(){
         if(toFindInitialBestMove(finder.decisions) === "UP"){
@@ -118,9 +120,8 @@
         if ((toFindInitialBestMove(finder.decisions)) !== "notFound") {
             clearInterval(forInitial);
             clearInterval(startSearch);
-            console.log("Search Stopped");
-            console.log(`best move is currently: ${toFindInitialBestMove(finder.decisions)}`);
-            setInterval(findGoal, 250);
+            console.log(`Initial Search Stopped, best move is currently: ${toFindInitialBestMove(finder.decisions)}`);
+            setInterval(findGoal, 500);
         }
     }
 
