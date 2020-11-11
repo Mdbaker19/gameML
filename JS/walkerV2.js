@@ -86,11 +86,14 @@
         });
         preferredChoices.best = choice;
         preferredChoices.helpfullness = highest;
+        // i want to remove this best and most helpful decision from the array to then have
+        // a second best option be in the preferred choices as well
         return preferredChoices;
     }
     //=========================//
 
-
+    //FOR LATER AFTER OTHER LOGIC IS FIGURED OUT. THIS WILL STOP THE INITIAL MOVEMENTS
+    // AND TELL WHICH MOVE SHOULD BE MADE AFTER IN THE CONSOLE;
     //=============//
     // function findGoal(){
     //     if(toFindInitialBestMove(finder.decisions) === "UP"){
