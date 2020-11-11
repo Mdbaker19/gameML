@@ -62,7 +62,8 @@
 
     //=========================//
     function logDecisions(){
-        console.log(moveBest(finder.decisions));
+        // console.log(moveBest(finder.decisions));
+        console.log(toFindInitialBestMove(finder.decisions));
     }
     // setInterval(logDecisions, 300);
     function startMovements(){
@@ -70,22 +71,23 @@
     }
     function beginFind(){
         startMovements();
-        logDecisions();
+        // logDecisions();
     }
     let startSearch = setInterval(beginFind, 500);
 
+    // WHERE TO USE THIS?? FORGOT HONESTLY
     function moveBest(arr){
         let preferredChoices = {};
         let highest = 0;
         let choice = null;
-        arr.forEach((num) => {
-           if(num.choiceNum > highest){
-               highest = num.choiceNum;
-               choice = num.choice;
+        arr.forEach((item) => {
+           if(item.choiceNum > highest){
+               highest = item.choiceNum;
+               choice = item.choice;
            }
         });
         preferredChoices.best = choice;
-        preferredChoices.helpfullness = highest;
+        preferredChoices.timesCorrect = highest;
         // i want to remove this best and most helpful decision from the array to then have
         // a second best option be in the preferred choices as well
         return preferredChoices;
@@ -95,38 +97,46 @@
     //FOR LATER AFTER OTHER LOGIC IS FIGURED OUT. THIS WILL STOP THE INITIAL MOVEMENTS
     // AND TELL WHICH MOVE SHOULD BE MADE AFTER IN THE CONSOLE;
     //=============//
-    // function findGoal(){
-    //     if(toFindInitialBestMove(finder.decisions) === "UP"){
-    //         console.log("Start going Up");
-    //     }else if(toFindInitialBestMove(finder.decisions) === "Right"){
-    //         console.log("Start going Right");
-    //     }else if(toFindInitialBestMove(finder.decisions) === "Down"){
-    //         console.log("Start going Down");
-    //     }else if(toFindInitialBestMove(finder.decisions) === "Left"){
-    //         console.log("Start going Left");
-    //     }
-    // }
-    //
-    // if(toFindInitialBestMove(finder.decisions) !== "null"){
-    //     setTimeout(function (){clearInterval(startSearch)}, 500);
-    //     console.log("Search Stopped");
-    //     console.log(toFindInitialBestMove(finder.decisions));
-    //     setInterval(findGoal, 250);
-    // }
-    //
-    //
-    // function toFindInitialBestMove(arr){
-    //     let highest = 0;
-    //     let choice = null;
-    //     arr.forEach((num) => {
-    //         if(num.choiceNum > highest){
-    //             highest = num.choiceNum;
-    //             choice = num.choice;
-    //         }
-    //     });
-    //     // console.log(choice);
-    //     return choice;
-    // }
+    function findGoal(){
+        if(toFindInitialBestMove(finder.decisions) === "UP"){
+            console.log("Start going Up");
+            // finder.y -= 5;
+        }else if(toFindInitialBestMove(finder.decisions) === "Right"){
+            console.log("Start going Right");
+            // finder.x += 5;
+        }else if(toFindInitialBestMove(finder.decisions) === "Down"){
+            console.log("Start going Down");
+            // finder.y += 5;
+        }else if(toFindInitialBestMove(finder.decisions) === "Left"){
+            console.log("Start going Left");
+            // finder.x -= 5;
+        }
+    }
+
+    let forInitial = setInterval(runInitial, 50);
+    function runInitial(){
+        if ((toFindInitialBestMove(finder.decisions)) !== "notFound") {
+            clearInterval(forInitial);
+            clearInterval(startSearch);
+            console.log("Search Stopped");
+            console.log(`best move is currently: ${toFindInitialBestMove(finder.decisions)}`);
+            setInterval(findGoal, 250);
+        }
+    }
+
+
+    function toFindInitialBestMove(arr){
+        let highest = 0;
+        let choice = "notFound";
+        arr.forEach((item) => {
+            if(item.choiceNum > highest){
+                highest = item.choiceNum;
+                choice = item.choice;
+            }
+        });
+        // console.log(choice);
+        return choice;
+    }
     //===============//
 
 
@@ -141,10 +151,10 @@
         fill(goal.x, goal.y, goal.w, goal.h, "#ffffff");
         context.fillText("GOAL", goal.x + goal.w/5, goal.y - goal.h/3, goal.w);
         context.fillText(`LIFE CYCLE : ${lifeCycle}`, 100, 100, 75);
-        context.fillText(`UP % => ${finder.decisions[0].choiceNum}`, 100, 125, 75);
-        context.fillText(`RIGHT % => ${finder.decisions[1].choiceNum}`, 100, 150, 75);
-        context.fillText(`DOWN % => ${finder.decisions[2].choiceNum}`, 100, 175, 75);
-        context.fillText(`LEFT % => ${finder.decisions[3].choiceNum}`, 100, 200, 75);
+        context.fillText(`UP => ${finder.decisions[0].choiceNum}`, 100, 125, 75);
+        context.fillText(`RIGHT => ${finder.decisions[1].choiceNum}`, 100, 150, 75);
+        context.fillText(`DOWN => ${finder.decisions[2].choiceNum}`, 100, 175, 75);
+        context.fillText(`LEFT => ${finder.decisions[3].choiceNum}`, 100, 200, 75);
     }
     function fill(lx, ty, w, h, c){
         context.fillStyle = c;
@@ -156,7 +166,7 @@
     function evalDistance(fx, fy, gx, gy){
         let a = Math.abs(fx - gx);
         let b = Math.abs(gy - fy);
-        return (a ** 2) + (b ** 2);
+        return Math.sqrt((a ** 2) + (b ** 2));
     }
 
 
