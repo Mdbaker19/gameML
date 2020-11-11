@@ -65,7 +65,7 @@
             goalFlipped = false;
         }
     });
-    setInterval(load, 5);
+    setInterval(load, 150);
     function load(){
         draw();
         walker.walk();
@@ -110,7 +110,7 @@
         ctx.fillRect(lx, ty, w, h);
     }
 
-    setInterval(evolve, 50);
+    setInterval(evolve, 300);
     function evolve(){
         learn();
         walker.color = ranColor();
