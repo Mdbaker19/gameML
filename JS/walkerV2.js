@@ -16,7 +16,7 @@
         x: 50,
         y: 50,
         s: 20,
-        moveSpeed: 10,
+        moveSpeed: 20,
         memory: [],
         rechecking: [],
         decisions: [{
@@ -159,6 +159,7 @@
     function traverseAndEval(){
         finder.traverse();
         // a re-eval distance function here as well
+
     }
 
     function toFindInitialBestMoves(arr){

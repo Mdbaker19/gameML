@@ -1,54 +1,110 @@
 (function () {
     "use strict";
+
     const cvs = document.getElementById("gridArea");
-    const context = cvs.getContext("2d");
-    const size = 80;
-    let s = 0;
-    const rows = Math.floor(cvs.width / size);
-    const cols = Math.floor(cvs.height / size);
+    const ctx = cvs.getContext("2d");
 
-    const searcher = {
-        x: 0,
-        y: 0,
-        moveSpeed: 80,
-        search: function (){
-            if(this.x < cvs.width-size){
-                this.x += this.moveSpeed;
-            }
-            if(this.y < cvs.height - size){
-                this.y += this.moveSpeed;
-            }
-        }
+    let cols = 5;
+    let rows = 5;
+    let grid = new Array();
+
+    let w = cvs.width/cols;
+    let h = cvs.height/rows;
+
+
+    let openSet = [];
+    let closedSet = [];
+    let start;
+    let end;
+
+
+    function Spot(i, j){
+        this.x = i;
+        this.y = j;
+        this.f = 0;
+        this.g = 0;
+        this.h = 0;
+
+        this.show = function (color){
+            ctx.fillStyle = color;
+            ctx.fillRect(this.x * w, this.y * h, w, h);
+        };
+
     }
-    setInterval(load, 1000);
 
 
-    function load() {
+
+
+
+    window.onload = function (){
+        // fill(0, 0, cvs.width, cvs.height, "#000000");
+        load();
         draw();
-        fill(720, 720, size, size, "#b01818");
-        fill(searcher.x, searcher.y, size, size, "#3e8fa7");
-        searcher.search();
     }
 
-    function draw() {
-        for (let i = 0; i < rows; i++) {
-            clearFill(0, s, size, size, "#000000");
-            let y = 0;
-            for (let j = 0; j < cols; j++) {
-                clearFill(s, y, size, size, "#000000");
-                y += size;
-            }
-            s += size;
+    function load(){
+
+        for(let i = 0; i < cols; i++){
+            grid[i] = new Array(rows);
         }
+
+        for(let i = 0; i < cols; i++){
+            for(let j = 0; j < rows; j++){
+                grid[i][j] = new Spot(i, j);
+            }
+        }
+        start = grid[0][0];
+        end = grid[cols-1][rows-1];
+
+        openSet.push(start);
+
+
+
+
+
+
+        console.log(grid);
     }
 
-    function clearFill(lx, ty, w, h, c) {
-        context.fillStyle = c;
-        context.strokeRect(lx, ty, w, h);
+    function draw(){
+
+        if(openSet.length > 0){
+            //keep going
+        } else {
+            //no solution
+        }
+
+
+        for(let i = 0; i < cols; i++){
+            for(let j = 0; j < rows; j++){
+                grid[i][j].show("#ffffff");
+            }
+        }
+
+        for(let i = 0; i < closedSet.length; i++){
+            closedSet[i].show("red");
+        }
+
+        for(let i = 0; i < openSet.length; i++){
+            openSet[i].show("green");
+        }
+
+
+    }
+    function fill(lx, ty, w, h, c){
+        ctx.fillStyle = c;
+        ctx.fillRect(lx, ty, w, h);
     }
 
-    function fill(lx, ty, w, h, c) {
-        context.fillStyle = c;
-        context.fillRect(lx, ty, w, h);
+    function rect(lx, ly, w, h){
+        ctx.lineWidth = 2;
+        ctx.strokeRect(lx, ly, w, h);
+
     }
+
+
+
+
+
+
 })();
