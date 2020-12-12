@@ -1,4 +1,4 @@
-function Walker(x, y, size){
+function Walker(x, y, size, up, right, down, left){
     this.x = x;
     this.y = y;
     this.s = size;
@@ -23,10 +23,10 @@ function Walker(x, y, size){
         value: 0
     }];
 
-    this.upChance = 20;
-    this.rightChance = 40;
-    this.downChance = 60;
-    this.leftChance = 80;
+    this.upChance = up || 25;//parseFloat((up / 2).toFixed(1));
+    this.rightChance = right || 50;//parseFloat((right / 2).toFixed(1));
+    this.downChance = down || 75;//parseFloat((down / 2).toFixed(1));
+    this.leftChance = left || 100;//parseFloat((left / 2).toFixed(1));
 
     this.move = function (rate){
         let ran = (~~(Math.random() * rate)) / 10;
@@ -34,12 +34,12 @@ function Walker(x, y, size){
         if(ranChoice < this.upChance){
             this.y -= ran;
             this.decisions[0].value++;
-        } else if(ranChoice < this.rightChance){
-            this.x += ran;
-            this.decisions[1].value++;
         } else if(ranChoice < this.downChance){
             this.y += ran;
             this.decisions[2].value++;
+        } else if(ranChoice < this.rightChance){
+            this.x += ran;
+            this.decisions[1].value++;
         } else if(ranChoice < this.leftChance){
             this.x -= ran;
             this.decisions[3].value++;
@@ -49,8 +49,5 @@ function Walker(x, y, size){
 
 }
 
-/* SO WITH EVERY MOVE THE DECISION IS INCREMENTED
-    AFTER THE TIME OUT
-        EVERY WALKER WOULD THEN BE RESPAWN WITH THAT DECISION AS MEMORY
-    THE DECISION VALUES / 100 GET ADJUSTED IN THE "RATE" OPTIONS TO INFLUENCE THE CHANCES TO MAKE THOSE SAME MOVES AGAIN
+/* THE DECISIONS ARRAY FROM MEMORY NEEDS TO TAKE OUT THE BEST 2 CHOICES TO THEN ADD THE THE BASE VALUE TO PREVENT THIS FULL UP MOVEMENT
  */

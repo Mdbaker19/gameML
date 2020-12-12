@@ -1,3 +1,3 @@
 function Walls(){
-
+    // ADD TO THIS LATER WHEN OTHER LOGIC IS FIGURED OUT
 }

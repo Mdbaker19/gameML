@@ -9,7 +9,7 @@ function Goal(x, y, s){
     }
 
     this.goal = function (objX, objY){
-        if(objX > this.x) {//WILL COME BACK TO THIS HIT DETECTION LATER
+        if(objX > this.x) {//WILL COME BACK TO THIS HIT DETECTION LATER WHEN THEY ACTUALLY MAKE IT
             return true;
         }
     }
