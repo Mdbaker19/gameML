@@ -23,19 +23,24 @@ function Walker(x, y, size){
         value: 0
     }];
 
+    this.upChance = 20;
+    this.rightChance = 40;
+    this.downChance = 60;
+    this.leftChance = 80;
+
     this.move = function (rate){
         let ran = (~~(Math.random() * rate)) / 10;
-        let ranChoice = ~~(Math.random() * 4);
-        if(ranChoice === 0){
+        let ranChoice = ~~(Math.random() * 101);
+        if(ranChoice < this.upChance){
             this.y -= ran;
             this.decisions[0].value++;
-        } else if(ranChoice === 1){
+        } else if(ranChoice < this.rightChance){
             this.x += ran;
             this.decisions[1].value++;
-        } else if(ranChoice === 2){
+        } else if(ranChoice < this.downChance){
             this.y += ran;
             this.decisions[2].value++;
-        } else if(ranChoice === 3){
+        } else if(ranChoice < this.leftChance){
             this.x -= ran;
             this.decisions[3].value++;
         }
