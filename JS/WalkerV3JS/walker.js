@@ -1,6 +1,6 @@
 let genCount = 0;
 
-const starterSpots = 50;
+const starterSpots = 450;
 let favorite;
 let favoritesBest;
 let children = [];
@@ -21,14 +21,13 @@ function load (){
     }
     favorite.show("#15beda");
     favorite.move(50);
-    target.show("#ffffff");
+    target.show("#e1dada");
 
     favoritesBest = favorite.x.toFixed(1) + ", " + favorite.y.toFixed(1);
 }
 
 function recallSpawn(){
-    getBestWalker(children);
-    theSpawning(50);
+    evolvingSpawn(50);
     genCount++;
     document.getElementById("gen").innerText = genCount.toString();
     document.getElementById("best").innerText = favoritesBest;
@@ -41,10 +40,25 @@ function init(){
 
 function theSpawning(x){
     children = [];
-    favorite = new Walker(starterSpots, starterSpots, 10);
+    favorite = new Walker(starterSpots, starterSpots, 10, 0, 0, 0, 0);
     for(let i = 0; i < x; i++){
-        let copy = new Walker(starterSpots, starterSpots, 10);
+        let copy = new Walker(starterSpots, starterSpots, 10, 0, 0, 0, 0);
         children.push(copy);
+    }
+}
+
+function evolvingSpawn(x){
+    let parent = getBestWalker(children);
+    children = [];
+    favorite = new Walker(starterSpots, starterSpots, 10, parent[0].value, parent[1].value, parent[2].value, parent[3].value);
+    console.log("==========");
+    console.log("up " + favorite.upChance);
+    console.log("right " + favorite.rightChance);
+    console.log("down " + favorite.downChance);
+    console.log("left " + favorite.leftChance);
+    console.log("==========");
+    for(let i = 0; i < x; i++){
+        children.push(new Walker(starterSpots, starterSpots, 10, parent[0].value, parent[1].value, parent[2].value, parent[3].value));
     }
 }
 
@@ -64,15 +78,16 @@ function getBestWalker(arrOfWalkers){
     allWalkersPositionsUponDeath.forEach(walker => {
        walker.distance = evalDis(walker.x, walker.y, target.x, target.y);
     });
-    let closestWalker = allWalkersPositionsUponDeath[0];
+    let tempClosestWalker = allWalkersPositionsUponDeath[0];
     allWalkersPositionsUponDeath.forEach(walker => {
         let distance = walker.distance;
-        if(distance < closestWalker.distance){
-            closestWalker = walker;
+        if(distance < tempClosestWalker.distance){
+            tempClosestWalker = walker;
         }
     });
-    console.log(closestWalker);
-    let winnerNumber = closestWalker.id;
+    let winnerNumber = tempClosestWalker.id;
     let winnersMemory = arrOfWalkers[winnerNumber].decisions;
+    console.log(tempClosestWalker.distance);
     console.log(winnersMemory);
+    return winnersMemory;
 }
