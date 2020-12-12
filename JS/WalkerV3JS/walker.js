@@ -1,5 +1,3 @@
-const c = document.getElementById("walk");
-const cc = c.getContext("2d");
 let genCount = 0;
 
 const starterSpots = 50;
@@ -10,7 +8,7 @@ let children = [];
 const target = new Goal(600, 550, 50);
 
 init();
-setInterval(init, 10000);
+setInterval(recallSpawn, 5000);
 setInterval(load, 50);
 
 
@@ -26,28 +24,19 @@ function load (){
     target.show("#ffffff");
 
     favoritesBest = favorite.x.toFixed(1) + ", " + favorite.y.toFixed(1);
+}
 
-
-    // console.log(favorite.decisions);
+function recallSpawn(){
+    getBestWalker(children);
+    theSpawning(50);
+    genCount++;
+    document.getElementById("gen").innerText = genCount.toString();
+    document.getElementById("best").innerText = favoritesBest;
 }
 
 
 function init(){
     theSpawning(50);
-    genCount++;
-
-    // if(genCount > 1){
-    //     let bestX = favorite.x;
-    //     let bestY = favorite.y;
-    //     children.forEach(child => {
-    //         for(let i = 0; i < child.decisions.length; i++){
-    //             if(child.decisions[i].value)
-    //         }
-    //     });
-    // }
-
-    document.getElementById("gen").innerText = genCount.toString();
-    document.getElementById("best").innerText = favoritesBest;
 }
 
 function theSpawning(x){
@@ -62,17 +51,28 @@ function theSpawning(x){
 
 
 
-
-
-
-
-
-
-
-function draw(){
-    fill(0, 0, c.width, c.height, "#1a1818");
-}
-function fill(lx, ty, w, h, c){
-    cc.fillStyle = c;
-    cc.fillRect(lx, ty, w, h);
+function getBestWalker(arrOfWalkers){
+    let allWalkersPositionsUponDeath = [];
+    for(let i = 0; i < arrOfWalkers.length; i++){
+        let coordinates = {
+            id: i,
+            x: parseFloat(arrOfWalkers[i].x.toFixed(1)),
+            y: parseFloat(arrOfWalkers[i].y.toFixed(1))
+        }
+        allWalkersPositionsUponDeath.push(coordinates);
+    }
+    allWalkersPositionsUponDeath.forEach(walker => {
+       walker.distance = evalDis(walker.x, walker.y, target.x, target.y);
+    });
+    let closestWalker = allWalkersPositionsUponDeath[0];
+    allWalkersPositionsUponDeath.forEach(walker => {
+        let distance = walker.distance;
+        if(distance < closestWalker.distance){
+            closestWalker = walker;
+        }
+    });
+    console.log(closestWalker);
+    let winnerNumber = closestWalker.id;
+    let winnersMemory = arrOfWalkers[winnerNumber].decisions;
+    console.log(winnersMemory);
 }
