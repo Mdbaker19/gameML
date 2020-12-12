@@ -1,6 +1,6 @@
 let genCount = 0;
 
-const starterSpots = 450;
+const starterSpots = 50;
 let favorite;
 let favoritesBest;
 let children = [];
@@ -51,7 +51,6 @@ function evolvingSpawn(x){
     let parent = getBestWalker(children);
     children = [];
     favorite = new Walker(starterSpots, starterSpots, 10, parent[0].value, parent[1].value, parent[2].value, parent[3].value);
-    console.log("==========");
     console.log("up " + favorite.upChance);
     console.log("right " + favorite.rightChance);
     console.log("down " + favorite.downChance);
@@ -89,5 +88,17 @@ function getBestWalker(arrOfWalkers){
     let winnersMemory = arrOfWalkers[winnerNumber].decisions;
     console.log(tempClosestWalker.distance);
     console.log(winnersMemory);
+    // let lowestValue = winnersMemory[0].value;
+    // winnersMemory.forEach(memory => {
+    //     let value = memory.value;
+    //     if(value < lowestValue){
+    //         lowestValue = value;
+    //     }
+    // });
+    // for(let i = 0; i < winnersMemory.length; i++){
+    //     if(winnersMemory[i].value === lowestValue){
+    //         winnersMemory[i].value = 10;
+    //     }
+    // }
     return winnersMemory;
 }
