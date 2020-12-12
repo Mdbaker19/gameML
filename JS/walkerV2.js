@@ -89,9 +89,9 @@
         moveBest(finder.decisions);
         logDecisions();
     }
-    let startSearch = setInterval(beginFind, 500);
+    let startSearch = setInterval(beginFind, 250);
 
-    // WHERE TO USE THIS?? FORGOT HONESTLY
+
     function moveBest(arr){
         let preferredChoices = {};
         let highest = 0;
@@ -145,20 +145,55 @@
 
 
     //==============//
-    let forInitial = setInterval(runInitial, 50);
+    let forInitial = setInterval(runInitial, 250);
     function runInitial(){
         if ((toFindInitialBestMoves(finder.decisions)).length === 2) {
             clearInterval(forInitial);
             clearInterval(startSearch);
             console.log(`Initial Search Stopped, best move is currently: ${toFindInitialBestMoves(finder.decisions)}`);
             console.log(`Go ${finder.rechecking[0]} and ${finder.rechecking[1]} to get to the goal`);
-            setInterval(traverseAndEval, 500);
+            setInterval(traverseAndEval, 50);
         }
     }
 
+    let reset = false;
     function traverseAndEval(){
-        finder.traverse();
-        // a re-eval distance function here as well
+        let previousDis = evalDistance(finder.x, finder.y, goal.x, goal.y);
+        if(!reset) {
+            finder.traverse();
+        }
+        let newDis = evalDistance(finder.x, finder.y, goal.x, goal.y);
+        if(previousDis < newDis){
+            finder.initialMove();
+            reset = true;
+            resetArr();
+            refindMoves(finder.decisions);
+        }
+    }
+    let count = 0;
+
+    function resetArr(){
+        if(count === 0) {
+            if (reset) {
+                finder.rechecking[0] = null;
+                finder.rechecking[1] = null;
+            }
+        }
+        count++;
+    }
+
+    function refindMoves(arr){
+        console.log("previous move was no longer helpful, need to find new moves, the move was: ^^^");
+        let base = 0;
+        arr.forEach((item) => {
+            if(item.choiceNum === base){
+                console.log(item.choice);
+                finder.rechecking[0] = item.choice;
+                finder.rechecking[1] = item.choice;
+            }
+        });
+        console.log("let's try going one of these ways instead ^^");
+        return finder.rechecking;
     }
 
     function toFindInitialBestMoves(arr){
@@ -170,7 +205,6 @@
                 }
             }
         });
-        // console.log(choice);
         return finder.rechecking;
     }
     //===============//
