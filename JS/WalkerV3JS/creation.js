@@ -23,24 +23,36 @@ function Walker(x, y, size, up, right, down, left){
         value: 0
     }];
 
-    this.upChance = up || 25;//parseFloat((up / 2).toFixed(1));
-    this.rightChance = right || 50;//parseFloat((right / 2).toFixed(1));
-    this.downChance = down || 75;//parseFloat((down / 2).toFixed(1));
-    this.leftChance = left || 100;//parseFloat((left / 2).toFixed(1));
+    // this.upChance = up || 25;//parseFloat((up / 2).toFixed(1));
+    // this.rightChance = right || 50;//parseFloat((right / 2).toFixed(1));
+    // this.downChance = down || 75;//parseFloat((down / 2).toFixed(1));
+    // this.leftChance = left || 100;//parseFloat((left / 2).toFixed(1));
+
+    this.upChance = 100 + up;
+    this.rightChance = 100 + right;
+    this.downChance = 100 + down;
+    this.leftChance = 100 + left;
+
 
     this.move = function (rate){
         let ran = (~~(Math.random() * rate)) / 10;
-        let ranChoice = ~~(Math.random() * 101);
-        if(ranChoice < this.upChance){
+        let ranUp = ~~(Math.random() * 275);
+        let ranRight = ~~(Math.random() * 275);
+        let ranDown = ~~(Math.random() * 275);
+        let ranLeft = ~~(Math.random() * 275);
+        if(ranUp < this.upChance){
             this.y -= ran;
             this.decisions[0].value++;
-        } else if(ranChoice < this.downChance){
+        }
+        if(ranDown < this.downChance){
             this.y += ran;
             this.decisions[2].value++;
-        } else if(ranChoice < this.rightChance){
+        }
+        if(ranRight < this.rightChance){
             this.x += ran;
             this.decisions[1].value++;
-        } else if(ranChoice < this.leftChance){
+        }
+        if(ranLeft < this.leftChance){
             this.x -= ran;
             this.decisions[3].value++;
         }
