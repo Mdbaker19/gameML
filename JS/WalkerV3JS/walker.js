@@ -8,8 +8,8 @@ let children = [];
 const target = new Goal(600, 550, 50);
 
 init();
-setInterval(recallSpawn, 5000);
-setInterval(load, 50);
+setInterval(recallSpawn, 3300);
+setInterval(load, 22);
 
 
 
@@ -27,7 +27,7 @@ function load (){
 }
 
 function recallSpawn(){
-    evolvingSpawn(50);
+    evolvingSpawn(100);
     genCount++;
     document.getElementById("gen").innerText = genCount.toString();
     document.getElementById("best").innerText = favoritesBest;
@@ -35,7 +35,7 @@ function recallSpawn(){
 
 
 function init(){
-    theSpawning(50);
+    theSpawning(100);
 }
 
 function theSpawning(x){
@@ -88,17 +88,17 @@ function getBestWalker(arrOfWalkers){
     let winnersMemory = arrOfWalkers[winnerNumber].decisions;
     console.log(tempClosestWalker.distance);
     console.log(winnersMemory);
-    // let lowestValue = winnersMemory[0].value;
-    // winnersMemory.forEach(memory => {
-    //     let value = memory.value;
-    //     if(value < lowestValue){
-    //         lowestValue = value;
-    //     }
-    // });
-    // for(let i = 0; i < winnersMemory.length; i++){
-    //     if(winnersMemory[i].value === lowestValue){
-    //         winnersMemory[i].value = 10;
-    //     }
-    // }
+    let lowestValue = winnersMemory[0].value;
+    winnersMemory.forEach(memory => {
+        let value = memory.value;
+        if(value < lowestValue){
+            lowestValue = value;
+        }
+    });
+    for(let i = 0; i < winnersMemory.length; i++){
+        if(winnersMemory[i].value === lowestValue){
+            winnersMemory[i].value = 5;
+        }
+    }
     return winnersMemory;
 }
