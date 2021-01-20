@@ -7,7 +7,11 @@ body{
     background-color: #4c4848;
     padding: 0 5vw;
 }
-#walk{
+/*#walk{*/
+/*    border: 5px solid aliceblue;*/
+/*    border-radius: 5px;*/
+/*}*/
+#w4{
     border: 5px solid aliceblue;
     border-radius: 5px;
 }
